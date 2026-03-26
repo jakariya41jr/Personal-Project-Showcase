@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="Md Jakariya Hasan — Digital Architect & Visual Storyteller. Immersive portfolio showcasing innovation, skills, and vision.">
+  <title>Jakariya Hasan | Cinematic Portfolio</title>
+
+  <!-- Google Fonts + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Playfair+Display:ital,wght@0,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #ff4d6d;
+      --primary-glow: rgba(255, 77, 109, 0.4);
+      --primary-soft: rgba(255, 77, 109, 0.15);
+      --bg-dark: #05050a;
+      --surface: rgba(12, 12, 20, 0.65);
+      --card-bg: rgba(20, 20, 32, 0.7);
+      --text-light: #f1f3f7;
+      --text-muted: #a0a5b9;
+      --border-glow: rgba(255, 77, 109, 0.25);
+      --transition-smooth: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      line-height: 1.5;
+    }
+
+    /* canvas background (particle system) */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* parallax overlay layers */
+    .parallax-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 30%, rgba(255, 77, 109, 0.03) 0%, transparent 70%);
+      opacity: 0.6;
+      transform: translateZ(0);
+    }
+
+    /* progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), #ff9eb3);
+      z-index: 1000;
+      transition: width 0.12s linear;
+      box-shadow: 0 0 6px var(--primary);
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(20, 20, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-glow);
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      font-family: 'Inter', sans-serif;
+    }
+    .lang-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    /* container */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: 80px 0;
+    }
+
+    .profile-floating {
+      width: 200px;
+      height: 200px;
+      margin-bottom: 2rem;
+      position: relative;
+      animation: floatHero 6s ease-in-out infinite;
+    }
+    @keyframes floatHero {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+    }
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 38% 62% 70% 30% / 40% 45% 55% 60%;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 45px var(--primary-glow);
+      transition: var(--transition-smooth);
+      will-change: transform;
+    }
+    .profile-img:hover {
+      transform: scale(1.03);
+      filter: brightness(1.05);
+      box-shadow: 0 0 60px var(--primary);
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 9vw, 5.6rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--primary), #ffb0c0);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .typing-container {
+      font-size: 1.4rem;
+      background: rgba(255, 77, 109, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 77, 109, 0.3);
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+    .typed-text {
+      font-weight: 500;
+    }
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      background: var(--primary);
+      margin-left: 5px;
+      animation: blink 0.9s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .tagline {
+      margin-top: 1.8rem;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 550px;
+      letter-spacing: 0.3px;
+    }
+
+    /* sections */
+    section {
+      margin: 100px 0 80px;
+    }
+    .section-title {
+      font-size: 2.8rem;
+      font-family: 'Playfair Display', serif;
+      background: linear-gradient(120deg, #fff, var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    /* journey card (story) */
+    .story-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: var(--transition-smooth);
+    }
+    .story-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-8px);
+    }
+    .story-card p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+      color: #ddd;
+    }
+
+    /* skills grid */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 2rem;
+    }
+    .skill-item {
+      flex: 1;
+      min-width: 220px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 28px 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: var(--transition-smooth);
+    }
+    .skill-item:hover {
+      transform: translateY(-8px);
+      border-color: var(--primary);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+    }
+    .skill-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    .skill-item h3 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .skill-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .skill-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #ff9eb3);
+      border-radius: 10px;
+      transition: width 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .skill-percent {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* projects grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .project-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 36px;
+      padding: 32px 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,77,109,0.1), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .project-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--primary);
+      box-shadow: 0 25px 40px -20px rgba(255, 77, 109, 0.3);
+    }
+    .project-card:hover::after {
+      opacity: 1;
+    }
+    .project-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+    .project-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+    .project-card p {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .card-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary, .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .btn-primary {
+      background: linear-gradient(95deg, var(--primary), #ff2e55);
+      color: white;
+      box-shadow: 0 5px 15px rgba(255,77,109,0.3);
+    }
+    .btn-primary:hover {
+      gap: 12px;
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px var(--primary);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,77,109,0.1);
+      transform: translateY(-3px);
+    }
+
+    /* vision section */
+    .vision-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 48px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .vision-card p {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* contact / CTA */
+    .cta-section {
+      text-align: center;
+      margin: 100px 0 60px;
+    }
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin: 35px 0;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .social-icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+      font-size: 1.7rem;
+      color: var(--text-light);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+    .social-icon:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(255,77,109,0.1);
+    }
+
+    footer {
+      padding: 50px 0 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 48px;
+      max-width: 550px;
+      width: 90%;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+      animation: modalUp 0.4s ease;
+    }
+    @keyframes modalUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-content h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+    .modal-content p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    .close-modal {
+      position: absolute;
+      top: 20px; right: 28px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    /* scroll to top */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 52px;
+      height: 52px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+      z-index: 99;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    .scroll-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* responsive */
+    @media (max-width: 760px) {
+      .container { padding: 0 20px; }
+      .hero { padding: 60px 0; }
+      .profile-floating { width: 150px; height: 150px; }
+      .story-card, .vision-card { padding: 30px 24px; }
+      .section-title { font-size: 2rem; }
+      .projects-grid { gap: 28px; }
+      .project-card { padding: 28px 20px; }
+      .skills-grid { flex-direction: column; }
+      .lang-toggle { top: 15px; right: 15px; padding: 6px 12px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="parallax-layer" id="parallaxLayer"></div>
+<div class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></div>
+<div class="lang-toggle" id="langToggle">EN / BN</div>
+
+<div class="container">
+  <!-- HERO SECTION -->
+  <div class="hero" data-aos="zoom-out" data-aos-duration="1300">
+    <div class="profile-floating">
+      <img src="https://github.com/jakariya41yt-cyber/my_photo/raw/refs/heads/main/FB_IMG_1770635659407.jpg" alt="Jakariya Hasan" class="profile-img" loading="lazy">
+    </div>
+    <h1>Md Jakariya <span style="color:var(--primary)">Hasan</span></h1>
+    <div class="typing-container">
+      <span class="typed-text" id="typedRole"></span><span class="cursor">|</span>
+    </div>
+    <div class="tagline" id="heroTaglineEn">Architect of digital emotions — blending code, design, and human experience.</div>
+    <div class="tagline" id="heroTaglineBn" style="display: none;">ডিজিটাল আবেগের স্থপতি — কোড, ডিজাইন আর মানবিক অভিজ্ঞতার মিশ্রণ।</div>
+  </div>
+
+  <!-- JOURNEY SECTION -->
+  <section data-aos="fade-up">
+    <div class="story-card">
+      <h2 class="section-title" id="journeyTitleEn" style="font-size:2.5rem; margin-bottom: 1.5rem;">✦ The Unwritten Path</h2>
+      <h2 class="section-title" id="journeyTitleBn" style="font-size:2.5rem; margin-bottom: 1.5rem; display: none;">✦ অলিখিত পথ</h2>
+      <p id="journeyText1En">I grew up in the quiet streets of Kishoreganj, where ambition often felt like a whisper against the noise of the ordinary. Early on, I discovered that technology was not just about logic — it was a canvas for the unspoken. Each line of code became a verse, each interface a bridge between silence and expression.</p>
+      <p id="journeyText1Bn" style="display: none;">কিশোরগঞ্জের শান্ত পথে বড় হয়েছি, যেখানে স্বপ্ন প্রায়ই সাধারণের কোলাহলে মৃদু ফিসফিসের মতো মনে হতো। খুব ছোটবেলায় বুঝেছি প্রযুক্তি শুধু যুক্তি নয় — এটি ছিল না-বলা কথার ক্যানভাস। কোডের প্রতিটি লাইন যেন কবিতা, প্রতিটি ইন্টারফেস নীরবতা আর অভিব্যক্তির সেতু।</p>
+      <p id="journeyText2En">Through failures and late nights, I learned that growth is not linear. It’s a spiral — you revisit old wounds with new eyes. Today, I stand as a Digital Architect and Visual Storyteller, driven by a mission: to build tools that feel human, interfaces that heal, and experiences that resonate beyond the screen.</p>
+      <p id="journeyText2Bn" style="display: none;">ব্যর্থতা আর রাতজাগার মধ্য দিয়ে শিখেছি, বিকাশ কখনো সরলরেখায় চলে না। এটি একটি সর্পিল — পুরনো ক্ষত নতুন চোখে দেখতে হয়। আজ আমি দাঁড়িয়ে আছি ডিজিটাল আর্কিটেক্ট ও ভিজুয়াল স্টোরিটেলার হিসেবে, যার লক্ষ্য: মানবিক টুলস তৈরি করা, নিরাময়ের ইন্টারফেস আর পর্দার বাইরেও প্রতিধ্বনিত অভিজ্ঞতা গড়ে তোলা।</p>
+      <p id="journeyText3En" style="margin-top: 16px;"><i class="fas fa-heart" style="color: var(--primary);"></i> My vision is to empower Bengali-speaking communities with technology that speaks their language — literally and emotionally.</p>
+      <p id="journeyText3Bn" style="margin-top: 16px; display: none;"><i class="fas fa-heart" style="color: var(--primary);"></i> আমার স্বপ্ন, বাংলাভাষী মানুষের জন্য এমন প্রযুক্তি তৈরি করা যা তাদের ভাষায় কথা বলে — আক্ষরিক ও আবেগিকভাবে।</p>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION (titles are bilingual) -->
+  <section data-aos="fade-up">
+    <h2 class="section-title" id="skillsTitleEn">⚡ Core Arsenal</h2>
+    <h2 class="section-title" id="skillsTitleBn" style="display: none;">⚡ দক্ষতার ভাণ্ডার</h2>
+    <div class="section-sub" id="skillsSubEn">Technologies I wield to create immersive digital worlds</div>
+    <div class="section-sub" id="skillsSubBn" style="display: none;">নিমগ্ন ডিজিটাল জগৎ তৈরি করতে আমি যে প্রযুক্তিগুলো ব্যবহার করি</div>
+    <div class="skills-grid" id="skillsGrid">
+      <div class="skill-item">
+        <i class="fas fa-code skill-icon"></i>
+        <h3 id="skillWebEn">Web Development</h3>
+        <h3 id="skillWebBn" style="display: none;">ওয়েব ডেভেলপমেন্ট</h3>
+        <div class="skill-bar-bg"><div class="skill-fill" data-width="92"></div></div>
+        <div class="skill-percent">92% — modern frameworks, performance</div>
+      </div>
+      <div class="skill-item">
+        <i class="fas fa-palette skill-icon"></i>
+        <h3 id="skillUiEn">UI/UX Design</h3>
+        <h3 id="skillUiBn" style="display: none;">UI/UX ডিজাইন</h3>
+        <div class="skill-bar-bg"><div class="skill-fill" data-width="87"></div></div>
+        <div class="skill-percent">87% — interaction, empathy, flow</div>
+      </div>
+      <div class="skill-item">
+        <i class="fas fa-brain skill-icon"></i>
+        <h3 id="skillAiEn">AI & Automation</h3>
+        <h3 id="skillAiBn" style="display: none;">এআই ও অটোমেশন</h3>
+        <div class="skill-bar-bg"><div class="skill-fill" data-width="78"></div></div>
+        <div class="skill-percent">78% — intelligent assistants, NLP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION (will be populated dynamically) -->
+  <section data-aos="fade-up">
+    <h2 class="section-title" id="projectsTitleEn">✨ Digital Creations</h2>
+    <h2 class="section-title" id="projectsTitleBn" style="display: none;">✨ ডিজিটাল সৃষ্টি</h2>
+    <div class="section-sub" id="projectsSubEn">Where imagination meets engineering</div>
+    <div class="section-sub" id="projectsSubBn" style="display: none;">যেখানে কল্পনা আর ইঞ্জিনিয়ারিং একসাথে মেলে</div>
+    <div class="projects-grid" id="projectsGrid"></div>
+  </section>
+
+  <!-- VISION SECTION -->
+  <section data-aos="fade-up">
+    <div class="vision-card">
+      <h2 class="section-title" id="visionTitleEn" style="font-size:2.5rem;">🚀 The Horizon</h2>
+      <h2 class="section-title" id="visionTitleBn" style="font-size:2.5rem; display: none;">🚀 আগামীর দিগন্ত</h2>
+      <p id="visionTextEn" style="margin-top: 24px;">I envision a future where technology dissolves barriers of language and literacy. My next chapter involves building an open‑source platform that teaches programming to Bengali youth using culturally resonant stories. Beyond code, I want to spark a generation of creators who build with purpose — not just profit. Innovation, for me, is the art of making the complex feel simple and the digital feel human.</p>
+      <p id="visionTextBn" style="margin-top: 24px; display: none;">আমার কল্পনায় এমন এক ভবিষ্যৎ যেখানে প্রযুক্তি ভাষা ও সাক্ষরতার বাধা ভেঙে দেয়। আমার পরবর্তী অধ্যায় হবে একটি ওপেন‑সোর্স প্ল্যাটফর্ম তৈরি করা, যা বাংলা তরুণদের প্রোগ্রামিং শেখাবে সাংস্কৃতিকভাবে অনুরণিত গল্পের মাধ্যমে। কোডের বাইরেও, আমি চাই সৃষ্টিকর্তাদের এক প্রজন্ম তৈরি হোক যারা শুধু লাভের জন্য নয়, উদ্দেশ্য নিয়ে কিছু গড়ে তোলে। উদ্ভাবন আমার কাছে মানে জটিলকে সহজ, আর ডিজিটালকে মানবিক করে তোলা।</p>
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION / CONTACT -->
+  <div class="cta-section" data-aos="fade-up">
+    <h2 class="section-title" id="ctaTitleEn">Let’s Connect</h2>
+    <h2 class="section-title" id="ctaTitleBn" style="display: none;">যোগাযোগ করুন</h2>
+    <div class="section-sub" id="ctaSubEn">Collaborate, create, or just have a conversation</div>
+    <div class="section-sub" id="ctaSubBn" style="display: none;">সহযোগিতা, সৃষ্টি, অথবা শুধু আড্ডা</div>
+    <div class="cta-buttons">
+      <a href="mailto:mdjakariyahasan10@gmail.com" class="btn-primary" style="font-size:1.1rem; padding: 14px 32px;"><i class="fas fa-envelope"></i> <span id="ctaBtnEn">Send a Message</span><span id="ctaBtnBn" style="display: none;">বার্তা পাঠান</span></a>
+      <a href="#" class="btn-secondary" id="exploreBtn" style="font-size:1.1rem; padding: 14px 32px;"><i class="fas fa-arrow-down"></i> <span id="exploreBtnEn">Explore Projects</span><span id="exploreBtnBn" style="display: none;">প্রকল্প দেখুন</span></a>
+    </div>
+    <div class="social-links">
+      <a href="https://www.facebook.com/jakariya41jr" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/jakariya41jr" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="https://t.me/jakariya41jr" target="_blank" class="social-icon"><i class="fab fa-telegram-plane"></i></a>
+      <!-- GitHub link removed as requested -->
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 Md Jakariya Hasan — Designed with ❤️ and cinematic vision. Every pixel tells a story.</p>
+  </footer>
+</div>
+
+<!-- MODAL STRUCTURE -->
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+    <p><strong id="modalTechLabelEn">Tech stack:</strong><strong id="modalTechLabelBn" style="display: none;">প্রযুক্তি:</strong> <span id="modalTech"></span></p>
+    <p><strong id="modalFeatureLabelEn">Key features:</strong><strong id="modalFeatureLabelBn" style="display: none;">বিশেষত্ব:</strong> <span id="modalFeature"></span></p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.0/dist/vanilla-tilt.min.js"></script>
+<script>
+  // ---------- PROJECT DATA (Bilingual) ----------
+  const projectsEn = [
+    { title: "JR Islamic Life Assistant", desc: "All-in-one Islamic app: prayer times, digital tasbih, and sunnah health tips. Modern tech meets spirituality.", icon: "fa-kaaba", link: "https://jakariya41jr.github.io/JR-Islamic-Life-Assistant/", tech: "HTML, CSS, JS, PWA", feature: "Qibla direction, daily duas, offline mode" },
+    { title: "JRS AI Assistant", desc: "Your natural AI companion fluent in Bengali. Makes daily tasks simpler through smart conversation.", icon: "fa-robot", link: "https://jakariya41jr.github.io/ai/", tech: "JavaScript, NLP, Voice API", feature: "Bangla dialogue, voice response, context memory" },
+    { title: "JRS HeartWave Scroll", desc: "Emotional scrolling experience with lo-fi music and animated visuals — a journey through feelings.", icon: "fa-heart-pulse", link: "https://jakariya41jr.github.io/scrolling/", tech: "GSAP, Canvas, Audio API", feature: "Scroll-sync animations, custom soundtrack" },
+    { title: "JR International TV", desc: "Premium cloud TV streaming platform. Smooth media consumption from anywhere.", icon: "fa-satellite-dish", link: "https://jakariya41jr.bro.bd/", tech: "Node.js, HLS, Cloud", feature: "Live TV, responsive UI, global access" },
+    { title: "Digital Ramadan Calendar", desc: "Smart sehri/iftar times, daily ayah, and spiritual reminders for Ramadan.", icon: "fa-mosque", link: "https://jakariya41jrc.pro.bd/", tech: "React, Firebase", feature: "Location-based timings, motivational tips" },
+    { title: "The Broken Bio Page", desc: "Aesthetic personal bio with broken heart theme, digital art, and melancholic vibe.", icon: "fa-user-ninja", link: "https://jakariya41jr.github.io/my-bio/", tech: "CSS Art, Parallax", feature: "Interactive art, mood-based music" }
+  ];
+
+  const projectsBn = [
+    { title: "জেআর ইসলামিক লাইফ অ্যাসিস্ট্যান্ট", desc: "অল-ইন-ওয়ান ইসলামিক অ্যাপ: নামাজের সময়, ডিজিটাল তাসবিহ, এবং সুন্নাহ স্বাস্থ্য টিপস। আধুনিক প্রযুক্তি ও আধ্যাত্মিকতার মেলবন্ধন।", icon: "fa-kaaba", link: "https://jakariya41jr.github.io/JR-Islamic-Life-Assistant/", tech: "HTML, CSS, JS, PWA", feature: "কিবলা দিক, দৈনিক দোয়া, অফলাইন মোড" },
+    { title: "জেআরএস এআই অ্যাসিস্ট্যান্ট", desc: "বাংলায় সাবলীল আপনার প্রাকৃতিক এআই সঙ্গী। স্মার্ট কথোপকথনে দৈনন্দিন কাজকে সহজ করে তোলে।", icon: "fa-robot", link: "https://jakariya41jr.github.io/ai/", tech: "JavaScript, NLP, Voice API", feature: "বাংলা কথোপকথন, ভয়েস রেসপন্স, কনটেক্সট মেমরি" },
+    { title: "জেআরএস হার্টওয়েভ স্ক্রোল", desc: "লোফাই মিউজিক ও অ্যানিমেটেড ভিজুয়াল সহ আবেগের স্পর্শে স্ক্রলিং অভিজ্ঞতা — অনুভূতির এক যাত্রা।", icon: "fa-heart-pulse", link: "https://jakariya41jr.github.io/scrolling/", tech: "GSAP, Canvas, Audio API", feature: "স্ক্রল-সিঙ্ক অ্যানিমেশন, কাস্টম সাউন্ডট্র্যাক" },
+    { title: "জেআর ইন্টারন্যাশনাল টিভি", desc: "প্রিমিয়াম ক্লাউড টিভি স্ট্রিমিং প্ল্যাটফর্ম। যেকোনো জায়গা থেকে মসৃণ মিডিয়া অভিজ্ঞতা।", icon: "fa-satellite-dish", link: "https://jakariya41jr.bro.bd/", tech: "Node.js, HLS, Cloud", feature: "লাইভ টিভি, রেসপন্সিভ UI, বিশ্বব্যাপী অ্যাক্সেস" },
+    { title: "ডিজিটাল রমজান ক্যালেন্ডার", desc: "স্মার্ট সেহরি/ইফতার সময়, দৈনিক আয়াত এবং রমজানের জন্য আধ্যাত্মিক রিমাইন্ডার।", icon: "fa-mosque", link: "https://jakariya41jrc.pro.bd/", tech: "React, Firebase", feature: "লোকেশন-ভিত্তিক সময়, প্রেরণাদায়ী টিপস" },
+    { title: "দ্য ব্রোকেন বায়ো পেইজ", desc: "ভাঙা হৃদয় থিম, ডিজিটাল আর্ট এবং মেলানকলিক ভাইব সমৃদ্ধ নান্দনিক ব্যক্তিগত বায়ো।", icon: "fa-user-ninja", link: "https://jakariya41jr.github.io/my-bio/", tech: "CSS Art, Parallax", feature: "ইন্টারঅ্যাক্টিভ আর্ট, মুড-ভিত্তিক মিউজিক" }
+  ];
+
+  let currentLang = 'en'; // 'en' or 'bn'
+
+  function renderProjects(lang) {
+    const grid = document.getElementById("projectsGrid");
+    const data = lang === 'en' ? projectsEn : projectsBn;
+    grid.innerHTML = '';
+    data.forEach((proj, idx) => {
+      const card = document.createElement("div");
+      card.className = "project-card";
+      card.setAttribute("data-aos", "fade-up");
+      card.setAttribute("data-aos-delay", (idx * 80).toString());
+      card.innerHTML = `
+        <i class="fas ${proj.icon} project-icon"></i>
+        <h3>${proj.title}</h3>
+        <p>${proj.desc.substring(0, 110)}${proj.desc.length > 110 ? '...' : ''}</p>
+        <div class="card-buttons">
+          <a href="${proj.link}" class="btn-primary" target="_blank">${lang === 'en' ? 'Live Demo' : 'লাইভ ডেমো'} <i class="fas fa-external-link-alt"></i></a>
+          <button class="btn-secondary details-btn" data-index="${idx}">${lang === 'en' ? 'Details' : 'বিস্তারিত'} <i class="fas fa-info-circle"></i></button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    // re-attach modal listeners
+    document.querySelectorAll(".details-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const idx = btn.getAttribute("data-index");
+        openModal(parseInt(idx), lang);
+      });
+    });
+    // re-apply tilt effect
+    if(window.matchMedia("(pointer: fine)").matches) {
+      VanillaTilt.init(document.querySelectorAll(".project-card"), {
+        max: 8, speed: 400, glare: true, "max-glare": 0.2, gyroscope: true
+      });
+    }
+  }
+
+  function openModal(index, lang) {
+    const data = lang === 'en' ? projectsEn : projectsBn;
+    const p = data[index];
+    document.getElementById("modalTitle").innerText = p.title;
+    document.getElementById("modalDesc").innerText = p.desc;
+    document.getElementById("modalTech").innerText = p.tech;
+    document.getElementById("modalFeature").innerText = p.feature;
+    document.getElementById("projectModal").style.display = "flex";
+  }
+
+  // Language toggle function
+  function setLanguage(lang) {
+    currentLang = lang;
+    // toggle visibility of all bilingual elements
+    const enElements = document.querySelectorAll('[id$="En"]');
+    const bnElements = document.querySelectorAll('[id$="Bn"]');
+    enElements.forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+    bnElements.forEach(el => el.style.display = lang === 'bn' ? '' : 'none');
+
+    // handle hero tagline specifically (two separate elements)
+    document.getElementById("heroTaglineEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("heroTaglineBn").style.display = lang === 'bn' ? 'block' : 'none';
+
+    // skills section titles and subtitles
+    document.getElementById("skillsTitleEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("skillsTitleBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("skillsSubEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("skillsSubBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("skillWebEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("skillWebBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("skillUiEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("skillUiBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("skillAiEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("skillAiBn").style.display = lang === 'bn' ? 'block' : 'none';
+
+    // projects section titles
+    document.getElementById("projectsTitleEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("projectsTitleBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("projectsSubEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("projectsSubBn").style.display = lang === 'bn' ? 'block' : 'none';
+
+    // vision
+    document.getElementById("visionTitleEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("visionTitleBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("visionTextEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("visionTextBn").style.display = lang === 'bn' ? 'block' : 'none';
+
+    // CTA
+    document.getElementById("ctaTitleEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("ctaTitleBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("ctaSubEn").style.display = lang === 'en' ? 'block' : 'none';
+    document.getElementById("ctaSubBn").style.display = lang === 'bn' ? 'block' : 'none';
+    document.getElementById("ctaBtnEn").style.display = lang === 'en' ? 'inline' : 'none';
+    document.getElementById("ctaBtnBn").style.display = lang === 'bn' ? 'inline' : 'none';
+    document.getElementById("exploreBtnEn").style.display = lang === 'en' ? 'inline' : 'none';
+    document.getElementById("exploreBtnBn").style.display = lang === 'bn' ? 'inline' : 'none';
+
+    // modal labels
+    document.getElementById("modalTechLabelEn").style.display = lang === 'en' ? 'inline' : 'none';
+    document.getElementById("modalTechLabelBn").style.display = lang === 'bn' ? 'inline' : 'none';
+    document.getElementById("modalFeatureLabelEn").style.display = lang === 'en' ? 'inline' : 'none';
+    document.getElementById("modalFeatureLabelBn").style.display = lang === 'bn' ? 'inline' : 'none';
+
+    // re-render projects with correct language
+    renderProjects(lang);
+
+    // restart typing animation with appropriate roles
+    clearTimeout(typingTimeout);
+    roleIdx = 0; charIdx = 0; isDeleting = false;
+    if (lang === 'en') roles = ["Digital Architect", "Visual Storyteller", "Innovation Lover", "আমার ভাষায় প্রযুক্তি"];
+    else roles = ["ডিজিটাল আর্কিটেক্ট", "ভিজুয়াল স্টোরিটেলার", "ইনোভেশন লাভার", "আমার ভাষায় প্রযুক্তি"];
+    typeEffect();
+  }
+
+  // Typing animation (supports language)
+  let roles = ["Digital Architect", "Visual Storyteller", "Innovation Lover", "আমার ভাষায় প্রযুক্তি"];
+  let roleIdx = 0, charIdx = 0, isDeleting = false;
+  const typedSpan = document.getElementById("typedRole");
+  let typingTimeout;
+
+  function typeEffect() {
+    const current = roles[roleIdx];
+    if(isDeleting) {
+      typedSpan.innerText = current.substring(0, charIdx--);
+      if(charIdx < 0) {
+        isDeleting = false;
+        roleIdx = (roleIdx + 1) % roles.length;
+        typingTimeout = setTimeout(typeEffect, 500);
+      } else typingTimeout = setTimeout(typeEffect, 60);
+    } else {
+      typedSpan.innerText = current.substring(0, charIdx++);
+      if(charIdx > current.length) {
+        isDeleting = true;
+        typingTimeout = setTimeout(typeEffect, 2000);
+      } else typingTimeout = setTimeout(typeEffect, 100);
+    }
+  }
+  typeEffect();
+
+  // Language toggle button
+  document.getElementById("langToggle").addEventListener("click", () => {
+    const newLang = currentLang === 'en' ? 'bn' : 'en';
+    setLanguage(newLang);
+  });
+
+  // Modal close logic
+  const modal = document.getElementById("projectModal");
+  const closeModalBtn = document.querySelector(".close-modal");
+  closeModalBtn.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", (e) => { if(e.target === modal) modal.style.display = "none"; });
+
+  // Skill bars animation on scroll
+  const skillFills = document.querySelectorAll(".skill-fill");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        const width = entry.target.getAttribute("data-width");
+        entry.target.style.width = width + "%";
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  skillFills.forEach(bar => observer.observe(bar));
+
+  // Particle system (unchanged)
+  const canvas = document.getElementById("bg-canvas");
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  let mouse = { x: null, y: null, radius: 150 };
+  let particleCount = window.innerWidth < 768 ? 45 : 90;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initParticles();
+  }
+  function initParticles() {
+    particles = [];
+    for(let i=0; i<particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2.2 + 0.8,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        color: `rgba(255, ${100 + Math.random() * 100}, 130, 0.5)`
+      });
+    }
+  }
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i=0; i<particles.length; i++) {
+      for(let j=i+1; j<particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.hypot(dx, dy);
+        if(dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(255, 100, 130, ${0.2 * (1 - dist/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    for(let p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      if(mouse.x !== null) {
+        const dx = mouse.x - p.x, dy = mouse.y - p.y, dist = Math.hypot(dx, dy);
+        if(dist < mouse.radius) {
+          const angle = Math.atan2(dy, dx);
+          const force = (mouse.radius - dist) / mouse.radius;
+          p.vx -= Math.cos(angle) * force * 0.18;
+          p.vy -= Math.sin(angle) * force * 0.18;
+          const maxSpeed = 1.0;
+          if(Math.abs(p.vx) > maxSpeed) p.vx = p.vx > 0 ? maxSpeed : -maxSpeed;
+          if(Math.abs(p.vy) > maxSpeed) p.vy = p.vy > 0 ? maxSpeed : -maxSpeed;
+        }
+      }
+    }
+    requestAnimationFrame(drawParticles);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  window.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener("mouseleave", () => { mouse.x = null; mouse.y = null; });
+  resizeCanvas();
+  drawParticles();
+
+  // scroll progress
+  window.addEventListener("scroll", () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById("progressBar").style.width = scrolled + "%";
+  });
+
+  // scroll top button
+  const scrollTopBtn = document.getElementById("scrollTop");
+  window.addEventListener("scroll", () => {
+    if(window.scrollY > 500) scrollTopBtn.classList.add("show");
+    else scrollTopBtn.classList.remove("show");
+  });
+  scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  // explore button scroll to projects
+  document.getElementById("exploreBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    const projectsSection = document.querySelector(".projects-grid");
+    if(projectsSection) projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // tilt effect on project cards (desktop) - applied after first render
+  if(window.matchMedia("(pointer: fine)").matches) {
+    VanillaTilt.init(document.querySelectorAll(".project-card"), {
+      max: 8, speed: 400, glare: true, "max-glare": 0.2, gyroscope: true
+    });
+  }
+
+  // parallax effect
+  const parallaxLayer = document.getElementById("parallaxLayer");
+  window.addEventListener("scroll", () => {
+    let scrollY = window.scrollY;
+    parallaxLayer.style.transform = `translateY(${scrollY * 0.08}px)`;
+  });
+
+  // micro-interaction: hover card light effect
+  document.querySelectorAll(".project-card").forEach(card => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty("--x", `${x}px`);
+      card.style.setProperty("--y", `${y}px`);
+    });
+  });
+
+  AOS.init({ duration: 800, once: true, offset: 100 });
+  renderProjects('en'); // initial render
+  setLanguage('en');    // set initial language to English (all bilingual elements visible)
+</script>
+</body>
+</html>
